@@ -1,0 +1,15 @@
+# 默认按平台原生行尾处理文本文件
+* text=auto
+
+# Shell 脚本在任何平台检出均保持 LF（Linux/macOS 必需）
+*.sh text eol=lf
+
+# Windows 批处理检出使用 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 二进制资源不做行尾转换
+*.png binary
+*.jpg binary
+*.docx binary
+*.jar binary
