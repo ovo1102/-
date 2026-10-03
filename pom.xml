@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  本地文件完整性哈希校验系统 - Maven 构建文件
+  说明：
+  1) 以 JDK 8 字节码为目标（release 参数为 8），实际使用 JDK 21 构建；
+  2) 运行时零第三方依赖，仅测试作用域引入 JUnit 5；
+  3) 产物为带 Main-Class 清单的可执行 jar。
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.hashcheck</groupId>
+    <artifactId>hash-check-tool</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>本地文件完整性哈希校验系统</name>
+    <description>基于 Java Swing 的本地文件 MD5/SHA-256 完整性校验桌面工具</description>
+
+    <properties>
+        <!-- 源码与报告统一使用 UTF-8 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- 保持 JDK 8 兼容性 -->
+        <maven.compiler.release>8</maven.compiler.release>
+        <!-- 依赖与插件版本集中管理 -->
+        <junit.version>5.10.2</junit.version>
+        <surefire.version>3.2.5</surefire.version>
+        <jacoco.version>0.8.11</jacoco.version>
+        <jar.plugin.version>3.4.1</jar.plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- JUnit 5 聚合包（含 jupiter / platform） -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- 仅测试作用域：运行时不引入任何第三方依赖 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 编译插件：release=8，由 maven.compiler.release 属性驱动，此处显式声明确保生效 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>8</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- 测试运行插件：支持 JUnit 5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <argLine>${argLine}</argLine>
+                </configuration>
+            </plugin>
+
+            <!-- 可执行 jar：写入 Main-Class 清单 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${jar.plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.hashcheck.ui.HashCheckGUI</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- 覆盖率插件：mvn test 时自动插桩，mvn jacoco:report 生成 HTML 报告 -->
+            <!-- 说明：工作区路径含中文，Windows 下 surefire 经 cmd.exe 传递 -javaagent
+                 参数时，destfile 中的中文路径可能被按系统代码页转码而导致代理偶发启动失败
+                 （processJavaStart failed）。因此 exec 数据文件显式放到 ASCII 的临时目录，
+                 报告产物仍输出到 target/site/jacoco，保证构建可重复。 -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <destFile>${java.io.tmpdir}/hashcheck-jacoco.exec</destFile>
+                    <dataFile>${java.io.tmpdir}/hashcheck-jacoco.exec</dataFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
