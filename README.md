@@ -40,8 +40,8 @@ java -version
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/ovo1102/-.git
-cd -/
+git clone https://github.com/ovo1102/JavaHashChecker.git
+cd JavaHashChecker
 
 # 2. 运行测试（可选，40 个用例）
 mvn clean test
