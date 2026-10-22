@@ -1,5 +1,10 @@
 # 本地文件完整性哈希校验工具（hash-check-tool）
 
+[![GitHub release](https://img.shields.io/github/v/release/ovo1102/JavaHashChecker)](https://github.com/ovo1102/JavaHashChecker/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/ovo1102/JavaHashChecker/total)](https://github.com/ovo1102/JavaHashChecker/releases)
+[![Java](https://img.shields.io/badge/Java-8%2B-orange)](https://github.com/ovo1102/JavaHashChecker#%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)](https://github.com/ovo1102/JavaHashChecker)
+
 一个基于 Java Swing 的纯本地文件完整性校验桌面工具：对单个文件或整个文件夹递归计算 **MD5 / SHA-256** 哈希，多线程并发加速、结果保序展示，并支持一键导出 UTF-8 文本报告。运行时零第三方依赖，开箱即用。
 
 ## 功能特性
@@ -32,9 +37,31 @@ java -version
 
 ### 安装步骤
 
-**方式一：直接使用已构建产物**
+**方式一：下载 Release 成品（推荐）**
 
-取得项目中的 `target/hash-check-tool-1.0.0.jar` 与启动脚本即可，无需安装。
+前往 [GitHub Releases](https://github.com/ovo1102/JavaHashChecker/releases/latest) 下载最新版 `hash-check-tool-x.y.z.jar`，双击或命令行运行即可，无需安装。
+
+当前版本 **v1.0.0** 直链：
+
+```text
+https://github.com/ovo1102/JavaHashChecker/releases/download/v1.0.0/hash-check-tool-1.0.0.jar
+```
+
+下载后建议核对 SHA-256，确保文件完整未被篡改：
+
+```text
+bfb0d2b656e6966fba37fb3f12d86e36a96d3a949533d3aa01f810a7c77dcab0  hash-check-tool-1.0.0.jar
+```
+
+```powershell
+# Windows
+certutil -hashfile hash-check-tool-1.0.0.jar SHA256
+```
+
+```bash
+# Linux / macOS
+sha256sum hash-check-tool-1.0.0.jar
+```
 
 **方式二：从源码构建**
 
